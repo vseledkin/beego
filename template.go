@@ -57,7 +57,13 @@ func ExecuteViewPathTemplate(wr io.Writer, name string, viewPath string, data in
 		templatesLock.RLock()
 		defer templatesLock.RUnlock()
 	}
+	//logs.Trace("Search template name: %s in path: %s", name, viewPath)
 	if beeTemplates, ok := beeViewPathTemplates[viewPath]; ok {
+		//logs.Trace("Got %d templates in path: %s", len(beeTemplates), viewPath)
+		//logs.Trace("Search name %s", name)
+		//for k := range beeTemplates {
+		//	logs.Trace("Has name %s want %s", k, name)
+		//}
 		if t, ok := beeTemplates[name]; ok {
 			var err error
 			if t.Lookup(name) != nil {
@@ -164,24 +170,30 @@ func AddTemplateExt(ext string) {
 //Can later be used by setting a controller ViewPath to this folder
 //will panic if called after beego.Run()
 func AddViewPath(viewPath string) error {
+
 	if beeViewPathTemplateLocked {
 		if _, exist := beeViewPathTemplates[viewPath]; exist {
 			return nil //Ignore if viewpath already exists
 		}
 		panic("Can not add new view paths after beego.Run()")
+	}
+
+	if _, exist := beeViewPathTemplates[viewPath]; exist {
+		return nil //Ignore if viewpath already exists
 	}
 	beeViewPathTemplates[viewPath] = make(map[string]*template.Template)
 	return BuildTemplate(viewPath)
 }
 
-func AddViewPathTemplates(viewPath string, templates map[string]*template.Template) error {
+func AddViewPathTemplates(viewPath string, tmlps map[string]*template.Template) error {
 	if beeViewPathTemplateLocked {
 		if _, exist := beeViewPathTemplates[viewPath]; exist {
 			return nil //Ignore if viewpath already exists
 		}
 		panic("Can not add new view paths after beego.Run()")
 	}
-	beeViewPathTemplates[viewPath] = templates
+	//logs.Trace("Put %d templates at %s", len(tmlps), viewPath)
+	beeViewPathTemplates[viewPath] = tmlps
 	return nil
 }
 

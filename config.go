@@ -226,7 +226,7 @@ func newBConfig() *Config {
 			StaticExtensionsToGzip: []string{".css", ".js"},
 			TemplateLeft:           "{{",
 			TemplateRight:          "}}",
-			ViewsPath:              "views",
+			ViewsPath:              "templates",
 			EnableXSRF:             false,
 			XSRFKey:                "beegoxsrf",
 			XSRFExpire:             0,

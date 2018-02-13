@@ -174,6 +174,17 @@ func AddViewPath(viewPath string) error {
 	return BuildTemplate(viewPath)
 }
 
+func AddViewPathTemplates(viewPath string, templates map[string]*template.Template) error {
+	if beeViewPathTemplateLocked {
+		if _, exist := beeViewPathTemplates[viewPath]; exist {
+			return nil //Ignore if viewpath already exists
+		}
+		panic("Can not add new view paths after beego.Run()")
+	}
+	beeViewPathTemplates[viewPath] = templates
+	return nil
+}
+
 func lockViewPaths() {
 	beeViewPathTemplateLocked = true
 }
